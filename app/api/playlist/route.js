@@ -23,8 +23,7 @@ export async function GET(request) {
   }
 
   try {
-    // const playlistUrl = `https://www.googleapis.com/youtube/data/v3/playlistItems?key=${API_KEY}&playlistId=${playlistId}&part=snippet&maxResults=${maxResults}${pageToken ? `&pageToken=${pageToken}` : ''}`;
-    const playlistUrl = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PLHe7gljAh4fP8ZcOGKvzCLm2-vrMI7k0S&channelId=UCaiEiGfJXJ7opRTgRKQZvUQ&maxResults=50&order=date&key=AIzaSyDHOad2L9p4go6ajaTEn9W22hpApGQ4R4c'
+    const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&channelId=UCaiEiGfJXJ7opRTgRKQZvUQ&maxResults=50&order=date&key=${API_KEY}`;
 
     const response = await fetch(playlistUrl);
     const data = await response.json();
@@ -48,7 +47,8 @@ export async function GET(request) {
     let videosWithDetails = data.items || [];
     
     if (videoIds) {
-      const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyDHOad2L9p4go6ajaTEn9W22hpApGQ4R4c&id=${videoIds}&part=contentDetails`
+      const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&id=${videoIds}&part=contentDetails`
+      // const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?key=AIzaSyDHOad2L9p4go6ajaTEn9W22hpApGQ4R4c&id=${videoIds}&part=contentDetails`
       // const detailsUrl = `https://www.googleapis.com/youtube/data/v3/videos?key=${API_KEY}&id=${videoIds}&part=contentDetails`;
       const detailsResponse = await fetch(detailsUrl);
       const detailsData = await detailsResponse.json();
