@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  typesense:
+    image: typesense/typesense:27.0
+    container_name: research-typesense
+    restart: on-failure
+    ports:
+      - "8108:8108"
+    volumes:
+      # This saves your database to a local folder called "typesense-data"
+      # so you don't lose your transcripts if the container restarts.
+      - ./typesense-data:/data
+    command: '--data-dir /data --api-key=Pedri170 --enable-cors=true'

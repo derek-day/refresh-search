@@ -1,65 +1,108 @@
-import Image from "next/image";
+'use client';
+
+import React from 'react';
+import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import { InstantSearch, SearchBox, Hits, Highlight, Configure } from 'react-instantsearch';
+import { ExternalLink } from 'lucide-react';
+
+// Configure the Typesense Adapter
+const typesenseAdapter = new TypesenseInstantSearchAdapter({
+  server: {
+    apiKey: 'Pedri170', // Match your docker-compose API key
+    nodes: [
+      {
+        host: '150.136.250.171', 
+        port: 8108,
+        protocol: 'http',
+      },
+    ],
+  },
+  additionalSearchParameters: {
+    query_by: 'text,title',
+    num_typos: 1,
+  },
+});
+const searchClient = typesenseAdapter.searchClient;
+
+// Formatting seconds to MM:SS
+const formatTime = (seconds: number) => {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+};
+
+// Custom component to render each search result card
+const Hit = ({ hit }: any) => {
+  const youtubeUrl = `https://youtu.be/${hit.video_id}?t=${hit.start_time}`;
+  const thumbnailUrl = `https://img.youtube.com/vi/${hit.video_id}/mqdefault.jpg`;
+
+  return (
+    <a 
+      href={youtubeUrl} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="flex flex-col bg-[#222] border border-gray-800 rounded-xl overflow-hidden hover:bg-[#2a2a2a] transition group"
+    >
+      <div className="relative h-40 overflow-hidden bg-black">
+        <img 
+          src={thumbnailUrl} 
+          alt={hit.title} 
+          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition"
+        />
+        <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 text-xs font-mono rounded">
+          {formatTime(hit.start_time)}
+        </div>
+      </div>
+      
+      <div className="p-4 flex-1">
+        <h3 className="text-sm font-semibold mb-2 flex justify-between items-start gap-2 text-white">
+          <span className="line-clamp-2">{hit.title}</span>
+          <ExternalLink className="w-4 h-4 text-gray-400 shrink-0 mt-1" />
+        </h3>
+        <p className="text-gray-400 text-sm">
+          {/* React InstantSearch handles the <mark> highlighting automatically */}
+          <Highlight attribute="text" hit={hit} classNames={{ highlighted: 'bg-yellow-200 text-black px-1 rounded' }} />
+        </p>
+      </div>
+    </a>
+  );
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-[#111] text-white p-6 md:p-12 font-sans">
+      <div className="max-w-6xl mx-auto">
+        
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-bold mb-4">Podcast Search</h1>
+          <p className="text-gray-400 text-sm">Powered by Typesense</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        <InstantSearch indexName="transcripts" searchClient={searchClient}>
+          {/* Default config for the search (e.g., 12 results per page) */}
+          <Configure hitsPerPage={12} />
+          
+          <div className="mb-8 max-w-2xl mx-auto">
+            <SearchBox 
+              placeholder="Search the transcripts..."
+              classNames={{
+                root: 'relative',
+                input: 'w-full p-4 pl-12 bg-[#222] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-white transition',
+                submitIcon: 'hidden',
+                resetIcon: 'hidden'
+              }}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          </div>
+
+          <Hits 
+            hitComponent={Hit} 
+            classNames={{
+              list: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4',
+              item: 'list-none'
+            }}
+          />
+        </InstantSearch>
+      </div>
     </div>
   );
 }

@@ -9,9 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "lucide-react": "^1.6.0",
     "next": "16.2.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-instantsearch": "^7.28.1",
+    "typesense-instantsearch-adapter": "^3.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
