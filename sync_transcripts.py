@@ -1,23 +1,23 @@
 import os
 import json
-import time      # Add this
-import random    # Add this
+import time      
+import random    
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 import typesense
 
-# --- CONFIGURATION ---
+# --- Youtube config ---
 YOUTUBE_API_KEY = 'AIzaSyCSXRgKCXuVVESi2Q9bvF8Xk0qNl6RjFMQ'
 PLAYLIST_ID = 'PLHe7gljAh4fP8ZcOGKvzCLm2-vrMI7k0S'
 
 # Typesense Config
 client = typesense.Client({
   'nodes': [{
-      'host': 'search.refreshto.me', # The host from your docker-compose.yml
-      'port': '443',                  # Back to 443
-      'protocol': 'https'               # Back to https
+      'host': 'search.refreshto.me', 
+      'port': '443',                  
+      'protocol': 'https'              
   }],
-  'api_key': 'Pedri170',                    # Use the API key from your docker-compose.yml
+  'api_key': 'Pedri170',                    
   'connection_timeout_seconds': 2
 })
 
