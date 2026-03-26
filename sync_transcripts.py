@@ -11,8 +11,8 @@ PLAYLIST_ID = 'PLHe7gljAh4fP8ZcOGKvzCLm2-vrMI7k0S'
 # Typesense Config
 client = typesense.Client({
   'nodes': [{
-      'host': 'search.refreshto.me', # The host from your docker-compose.yml
-      'port': '433',                  # Back to 433
+      'host': 'refreshto.me', # The host from your docker-compose.yml
+      'port': '443',                  # Back to 443
       'protocol': 'https'               # Back to https
   }],
   'api_key': 'Pedri170',                    # Use the API key from your docker-compose.yml

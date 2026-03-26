@@ -11,8 +11,8 @@ const typesenseAdapter = new TypesenseInstantSearchAdapter({
     apiKey: 'Pedri170', // Match your docker-compose API key
     nodes: [
       {
-        host: 'search.refreshto.me', 
-        port: 433,
+        host: 'refreshto.me', 
+        port: 443,
         protocol: 'https',
       },
     ],
