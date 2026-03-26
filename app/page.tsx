@@ -11,9 +11,9 @@ const typesenseAdapter = new TypesenseInstantSearchAdapter({
     apiKey: 'Pedri170', // Match your docker-compose API key
     nodes: [
       {
-        host: '150.136.250.171', 
-        port: 8108,
-        protocol: 'http',
+        host: 'search.refreshto.me', 
+        port: 433,
+        protocol: 'https',
       },
     ],
   },
@@ -74,8 +74,8 @@ export default function Home() {
       <div className="max-w-6xl mx-auto">
         
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold mb-4">Podcast Search</h1>
-          <p className="text-gray-400 text-sm">Powered by Typesense</p>
+          <h1 className="text-5xl font-bold mb-4">Refresh Tome</h1>
+          <p className="text-gray-400 text-sm">Search through Youtube transcripts</p>
         </div>
 
         <InstantSearch indexName="transcripts" searchClient={searchClient}>

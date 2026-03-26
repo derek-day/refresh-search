@@ -11,9 +11,9 @@ PLAYLIST_ID = 'PLHe7gljAh4fP8ZcOGKvzCLm2-vrMI7k0S'
 # Typesense Config
 client = typesense.Client({
   'nodes': [{
-      'host': '150.136.250.171', # The IP address of your Oracle VM
-      'port': '8108',                  # Back to 8108
-      'protocol': 'http'               # Back to http
+      'host': 'search.refreshto.me', # The host from your docker-compose.yml
+      'port': '433',                  # Back to 433
+      'protocol': 'https'               # Back to https
   }],
   'api_key': 'Pedri170',                    # Use the API key from your docker-compose.yml
   'connection_timeout_seconds': 2
