@@ -1,5 +1,7 @@
 import os
 import json
+import time      # Add this
+import random    # Add this
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 import typesense
@@ -112,6 +114,10 @@ def main():
             processed_videos.add(vid_id)
             with open(STATE_FILE, 'w') as f:
                 json.dump(list(processed_videos), f)
+
+            pause = random.uniform(3.0, 6.0)
+            print(f"Success. Pausing for {pause:.1f} seconds to avoid rate limits...\n")
+            time.sleep(pause)
                 
         except Exception as e:
             print(f"Could not get transcript for {vid_id}: {e}")
