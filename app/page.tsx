@@ -103,7 +103,7 @@ export default function Home() {
         
         <div className="text-center mb-10 flex flex-col items-center">
           {/* Title styled with a soft gradient */}
-          <h1 className="text-5xl md:text-7xl font-extrabold relative z-20 tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-[#a89cbd]">
+          <h1 className="text-5xl md:text-7xl font-extrabold relative z-20 tracking-tight bg-clip-text bg-gradient-to-b from-white to-[#a89cbd]">
             Refresh Tome
           </h1>
           
