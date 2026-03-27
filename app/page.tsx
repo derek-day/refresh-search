@@ -124,12 +124,12 @@ export default function Home() {
         <div className="text-center mb-10 flex flex-col items-center">
           
           {/* Title with Cinzel font and intense drop shadow */}
-          <h1 className={`text-5xl md:text-7xl font-bold relative z-20 tracking-wider text-[#e2d8f4] drop-shadow-[0_0_15px_rgba(139,93,223,0.5)] ${cinzel.className}`}>
+          <h1 className={`text-5xl md:text-7xl font-bold relative mt-2 z-20 tracking-wider text-[#e2d8f4] drop-shadow-[0_0_15px_rgba(139,93,223,0.5)] ${cinzel.className}`}>
             Refresh Tome
           </h1>
           
           <div 
-            className="relative w-[350px] h-[350px] -my-24 pointer-events-none z-0"
+            className="relative w-[350px] h-[350px] -my-20 pointer-events-none z-0"
             style={{
               mixBlendMode: 'screen',
               maskImage: 'radial-gradient(circle, black 30%, transparent 65%)',
