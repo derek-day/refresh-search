@@ -67,17 +67,17 @@ const Hit = ({ hit }: any) => {
         </div>
         
         <div className="p-5 flex-1 flex flex-col relative">
-          <h3 className={`text-lg font-bold mb-3 text-[#e2d8f4] group-hover:text-white transition-colors ${cinzel.className} tracking-wider`}>
+          <h3 className={`text-lg font-bold mb-3 text-[#e2d8f4] group-hover:text-white transition-colors ${cinzel.className} tracking-wide`}>
             <span className="line-clamp-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{hit.title}</span>
           </h3>
           
-          <p className="text-[#a89cbd] text-base leading-relaxed mt-auto tracking-wide">
+          {/* <p className="text-[#a89cbd] text-base leading-relaxed mt-auto tracking-normal"> */}
+          <p className="text-[#a89cbd] group-hover:text-[#e2d8f4] text-base leading-relaxed mt-auto tracking-normal">
             <Highlight attribute="text" hit={hit} />
           </p>
 
-          {/* Subtly glowing corners for that magical UI feel */}
-          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          {/* <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div> */}
         </div>
       </div>
     </a>
@@ -147,14 +147,14 @@ export default function Home() {
             {/* The Search Bar: Styled like an engraved plaque */}
             <div className="p-1 border border-[#2a1b42] bg-[#05020a] shadow-[0_0_30px_rgba(0,0,0,1)]">
               <div className="relative border border-[#1a1025] bg-[#0a0514]">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#4a2b7a] w-5 h-5 z-10" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#927faf] w-5 h-5 z-10" />
                 
                 <SearchBox 
                   placeholder="Search the volumes..."
                   classNames={{
                     root: 'relative',
                     form: 'relative',
-                    input: `w-full p-4 pl-12 bg-transparent text-[#e2d8f4] placeholder-[#4a2b7a] focus:outline-none focus:bg-[#0c071a] transition-colors text-xl ${crimson.className}`,
+                    input: `w-full p-4 pl-12 bg-transparent text-[#e2d8f4] placeholder-[#927faf] focus:outline-none focus:bg-[#0c071a] transition-colors text-xl ${crimson.className}`,
                     submitIcon: 'hidden',
                     resetIcon: 'hidden',
                     loadingIcon: 'hidden'
