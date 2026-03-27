@@ -132,8 +132,8 @@ export default function Home() {
             className="relative w-[350px] h-[350px] -my-22 pointer-events-none z-0"
             style={{
               mixBlendMode: 'screen',
-              maskImage: 'radial-gradient(circle, black 30%, transparent 65%)',
-              WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 65%)'
+              maskImage: 'radial-gradient(circle, black 30%, transparent 70%)',
+              WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 70%)'
             }}
           >
              <EvilEye eyeColor="#8b5ddf" />
