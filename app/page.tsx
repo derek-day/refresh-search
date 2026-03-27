@@ -94,7 +94,7 @@ export default function Home() {
            style={{
              backgroundImage: 'linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 1) 50%)',
              backgroundSize: '100% 4px',
-             animation: 'scanlines 10s linear infinite'
+             animation: 'scanlines 35s linear infinite'
            }}>
       </div>
 
