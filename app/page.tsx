@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import { InstantSearch, SearchBox, Hits, Highlight, Configure } from 'react-instantsearch';
-import { Search } from 'lucide-react';
+import { Search, Eye } from 'lucide-react';
 import EvilEye from '../components/EvilEye';
 
-// 1. D&D Typography: Cinzel for headers, Crimson Pro for body text
+// D&D Typography
 import { Cinzel_Decorative, Crimson_Pro } from 'next/font/google'; 
 const cinzel = Cinzel_Decorative({ subsets: ['latin'], weight: ['400', '700', '900'] });
 const crimson = Crimson_Pro({ subsets: ['latin'], weight: ['400', '600', '700'] });
@@ -14,18 +14,9 @@ const crimson = Crimson_Pro({ subsets: ['latin'], weight: ['400', '600', '700'] 
 const typesenseAdapter = new TypesenseInstantSearchAdapter({
   server: {
     apiKey: 'Pedri170',
-    nodes: [
-      {
-        host: 'search.refreshto.me',
-        port: 443,
-        protocol: 'https',
-      },
-    ],
+    nodes: [{ host: 'search.refreshto.me', port: 443, protocol: 'https' }],
   },
-  additionalSearchParameters: {
-    query_by: 'text,title',
-    num_typos: 1,
-  },
+  additionalSearchParameters: { query_by: 'text,title', num_typos: 1 },
 });
 const searchClient = typesenseAdapter.searchClient;
 
@@ -35,7 +26,7 @@ const formatTime = (seconds: number) => {
   return `${m}:${s}`;
 };
 
-// 2. The Tome Page (Card) Component
+// The Tome Page (Card) Component
 const Hit = ({ hit }: any) => {
   const youtubeUrl = `https://youtu.be/${hit.video_id}?t=${hit.start_time}`;
   const thumbnailUrl = `https://img.youtube.com/vi/${hit.video_id}/mqdefault.jpg`;
@@ -45,23 +36,19 @@ const Hit = ({ hit }: any) => {
       href={youtubeUrl} 
       target="_blank" 
       rel="noopener noreferrer"
-      // The Double Border Wrapper: Outer Border
-      className="block bg-[#05020a] p-1 border border-[#2a1b42] hover:border-[#8b5ddf] transition-colors duration-300 group relative shadow-[0_0_15px_rgba(0,0,0,0.8)]"
+      className="block bg-[#05020a] p-1 border border-[var(--border-outer)] hover:border-[var(--accent)] transition-colors duration-300 group relative shadow-[0_0_15px_rgba(0,0,0,0.8)]"
     >
-      {/* The Inner Border */}
-      <div className="border border-[#1a1025] group-hover:border-[#4a2b7a] flex flex-col h-full bg-[#0a0514] transition-colors duration-300">
+      <div className="border border-[var(--border-inner)] group-hover:border-[var(--accent-muted)] flex flex-col h-full bg-[#0a0514] transition-colors duration-300">
         
         {/* Scrying Pool Thumbnail */}
-        <div className="relative h-40 overflow-hidden bg-[#05020a] border-b border-[#1a1025]">
-          {/* Purple overlay to tint the image */}
-          <div className="absolute inset-0 bg-[#8b5ddf] mix-blend-overlay opacity-40 group-hover:opacity-20 transition-opacity z-10"></div>
+        <div className="relative h-40 overflow-hidden bg-[#05020a] border-b border-[var(--border-inner)]">
+          <div className="absolute inset-0 bg-[var(--thumbnail)] mix-blend-[var(--overlay-blend)] opacity-[var(--overlay-opacity)] group-hover:opacity-10 transition-opacity z-10"></div>
           <img 
             src={thumbnailUrl} 
             alt={hit.title} 
-            // Grayscale base that regains color on hover
             className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
           />
-          <div className={`absolute bottom-2 right-2 bg-[#05020a] border border-[#8b5ddf]/50 text-[#dcb8ff] px-2 py-0.5 text-xs font-bold shadow-lg z-20 ${cinzel.className}`}>
+          <div className={`absolute bottom-2 right-2 bg-[#05020a] border border-[var(--accent)]/50 text-[var(--accent)] px-2 py-0.5 text-xs font-bold shadow-lg z-20 ${cinzel.className}`}>
             {formatTime(hit.start_time)}
           </div>
         </div>
@@ -71,13 +58,9 @@ const Hit = ({ hit }: any) => {
             <span className="line-clamp-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{hit.title}</span>
           </h3>
           
-          {/* <p className="text-[#a89cbd] text-base leading-relaxed mt-auto tracking-normal"> */}
-          <p className="text-[#a89cbd] group-hover:text-[#e2d8f4] text-base leading-relaxed mt-auto tracking-normal">
+          <p className="text-[var(--text-muted)] group-hover:text-[#e2d8f4] text-base leading-relaxed mt-auto tracking-normal transition-colors">
             <Highlight attribute="text" hit={hit} />
           </p>
-
-          {/* <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div> */}
         </div>
       </div>
     </a>
@@ -85,12 +68,87 @@ const Hit = ({ hit }: any) => {
 };
 
 export default function Home() {
+  // Toggle for Colorblind/High-Contrast Mode
+  const [isTrueSight, setIsTrueSight] = useState(false);
+
   return (
-    // Body font applied globally
-    <div className={`min-h-screen bg-[#06040a] text-[#e2d8f4] p-6 md:p-12 overflow-x-hidden relative ${crimson.className}`}>
-      
-      {/* 3. The moving CRT scanline overlay */}
-      <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.15] mix-blend-overlay"
+    // The data-theme attribute controls the CSS variables below
+    <div 
+      className={`min-h-screen bg-[#06040a] text-[#e2d8f4] p-6 md:p-12 overflow-x-hidden relative ${crimson.className}`}
+      data-theme={isTrueSight ? 'high-contrast' : 'default'}
+    >
+      {/* High Contrast / Accessibility Toggle Button */}
+      <button
+        onClick={() => setIsTrueSight(!isTrueSight)}
+        className={`absolute top-6 right-6 z-50 flex items-center gap-2 px-4 py-2 border border-[var(--border-outer)] bg-[#05020a] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors font-bold text-sm tracking-widest uppercase ${crimson.className}`}
+        aria-label="Toggle High Contrast Mode"
+      >
+        <Eye className="w-5 h-5" />
+        <span className="hidden sm:inline">High Contrast</span>
+      </button>
+
+      {/* Global CSS for Themes, Animations, and Scrollbar */}
+      <style dangerouslySetInnerHTML={{__html: `
+        :root {
+          --accent: #8b5ddf;
+          --thumbnail: transparent;
+          --accent-muted: #4a2b7a;
+          --border-outer: #2a1b42;
+          --border-inner: #1a1025;
+          --text-muted: #a89cbd;
+          --text-placeholder: #927faf;
+          --shadow-color: rgba(139, 93, 223, 0.5);
+          --overlay-blend: overlay;
+          --overlay-opacity: 0.4;
+          --highlight-bg: transparent;
+          --highlight-color: #dcb8ff;
+          --highlight-shadow: rgba(139, 93, 223, 0.6);
+          --highlight-border: #8b5ddf;
+        }
+
+        [data-theme='high-contrast'] {
+          --accent: #ffffff;
+          --thumbnail: #ffffff;
+          --accent-muted: #888888;
+          --border-outer: #555555;
+          --border-inner: #333333;
+          --text-muted: #cccccc;
+          --text-placeholder: #aaaaaa;
+          --shadow-color: rgba(255, 255, 255, 0.4);
+          --overlay-blend: normal;
+          --overlay-opacity: 0.05;
+          --highlight-bg: #ffffff;
+          --highlight-color: #000000;
+          --highlight-shadow: rgba(255, 255, 255, 0.8);
+          --highlight-border: #ffffff;
+        }
+
+        .title-shadow {
+          filter: drop-shadow(0 0 15px var(--shadow-color));
+        }
+
+        @keyframes scanlines {
+          from { background-position: 0 0; }
+          to { background-position: 0 -100px; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #06040a; border-left: 1px solid var(--border-inner); }
+        ::-webkit-scrollbar-thumb { background: var(--border-outer); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        mark.ais-Highlight-highlighted {
+          background-color: var(--highlight-bg);
+          color: var(--highlight-color);
+          text-shadow: 0 0 8px var(--highlight-shadow);
+          border-bottom: 1px dashed var(--highlight-border);
+          font-weight: 700;
+          padding: 0 2px;
+        }
+      `}} />
+
+      {/* The moving CRT scanline overlay */}
+      <div className="pointer-events-none fixed inset-0 z-40 opacity-[0.15] mix-blend-overlay"
            style={{
              backgroundImage: 'linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 1) 50%)',
              backgroundSize: '100% 4px',
@@ -98,33 +156,10 @@ export default function Home() {
            }}>
       </div>
 
-      {/* Global CSS for animations, highlight, and scrollbar */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes scanlines {
-          from { background-position: 0 0; }
-          to { background-position: 0 -100px; }
-        }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #06040a; border-left: 1px solid #1a1025; }
-        ::-webkit-scrollbar-thumb { background: #2a1b42; }
-        ::-webkit-scrollbar-thumb:hover { background: #4a2b7a; }
-
-        mark.ais-Highlight-highlighted {
-          background-color: transparent;
-          color: #dcb8ff;
-          text-shadow: 0 0 8px rgba(139, 93, 223, 0.6);
-          border-bottom: 1px dashed #8b5ddf;
-          font-weight: 700;
-        }
-      `}} />
-
       <div className="max-w-6xl mx-auto relative z-10">
         
         <div className="text-center mb-10 flex flex-col items-center">
-          
-          {/* Title with Cinzel font and intense drop shadow */}
-          <h1 className={`text-5xl md:text-7xl font-bold relative mt-2 z-20 tracking-wider text-[#e2d8f4] drop-shadow-[0_0_15px_rgba(139,93,223,0.5)] ${cinzel.className}`}>
+          <h1 className={`text-5xl md:text-7xl font-bold relative mt-2 z-20 tracking-wider text-[#e2d8f4] title-shadow transition-all duration-500 ${cinzel.className}`}>
             Refresh Tome
           </h1>
           
@@ -136,7 +171,8 @@ export default function Home() {
               WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 70%)'
             }}
           >
-             <EvilEye eyeColor="#8b5ddf" />
+             {/* The Eye dynamically updates its flame color based on the True Sight state */}
+             <EvilEye eyeColor={isTrueSight ? "#818181" : "#8b5ddf"} />
           </div>
         </div>
 
@@ -144,17 +180,16 @@ export default function Home() {
           <Configure hitsPerPage={16} />
           
           <div className="mb-16 max-w-2xl mx-auto relative group z-20">
-            {/* The Search Bar: Styled like an engraved plaque */}
-            <div className="p-1 border border-[#2a1b42] bg-[#05020a] shadow-[0_0_30px_rgba(0,0,0,1)]">
-              <div className="relative border border-[#1a1025] bg-[#0a0514]">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#927faf] w-5 h-5 z-10" />
+            <div className="p-1 border border-[var(--border-outer)] bg-[#05020a] shadow-[0_0_30px_rgba(0,0,0,1)] transition-colors">
+              <div className="relative border border-[var(--border-inner)] bg-[#0a0514] transition-colors">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent-muted)] w-5 h-5 z-10 transition-colors" />
                 
                 <SearchBox 
-                  placeholder="Search the volumes..."
+                  placeholder="Search the chapters..."
                   classNames={{
                     root: 'relative',
                     form: 'relative',
-                    input: `w-full p-4 pl-12 bg-transparent text-[#e2d8f4] placeholder-[#927faf] focus:outline-none focus:bg-[#0c071a] transition-colors text-xl ${crimson.className}`,
+                    input: `w-full p-4 pl-12 bg-transparent text-[#e2d8f4] placeholder-[var(--text-placeholder)] focus:outline-none focus:bg-[#0c071a] transition-colors text-xl ${crimson.className}`,
                     submitIcon: 'hidden',
                     resetIcon: 'hidden',
                     loadingIcon: 'hidden'
@@ -167,9 +202,8 @@ export default function Home() {
           <Hits 
             hitComponent={Hit} 
             classNames={{
-              // Sharpened the grid gap to look more structured
               list: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-stretch justify-items-center',
-              item: 'list-none flex'
+              item: 'list-none flex w-full'
             }}
           />
         </InstantSearch>
@@ -177,3 +211,191 @@ export default function Home() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+// 'use client';
+
+// import React from 'react';
+// import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+// import { InstantSearch, SearchBox, Hits, Highlight, Configure } from 'react-instantsearch';
+// import { Search } from 'lucide-react';
+// import EvilEye from '../components/EvilEye';
+
+// // 1. D&D Typography: Cinzel for headers, Crimson Pro for body text
+// import { Cinzel_Decorative, Crimson_Pro } from 'next/font/google'; 
+// const cinzel = Cinzel_Decorative({ subsets: ['latin'], weight: ['400', '700', '900'] });
+// const crimson = Crimson_Pro({ subsets: ['latin'], weight: ['400', '600', '700'] });
+
+// const typesenseAdapter = new TypesenseInstantSearchAdapter({
+//   server: {
+//     apiKey: 'Pedri170',
+//     nodes: [
+//       {
+//         host: 'search.refreshto.me',
+//         port: 443,
+//         protocol: 'https',
+//       },
+//     ],
+//   },
+//   additionalSearchParameters: {
+//     query_by: 'text,title',
+//     num_typos: 1,
+//   },
+// });
+// const searchClient = typesenseAdapter.searchClient;
+
+// const formatTime = (seconds: number) => {
+//   const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+//   const s = (seconds % 60).toString().padStart(2, '0');
+//   return `${m}:${s}`;
+// };
+
+// // 2. The Tome Page (Card) Component
+// const Hit = ({ hit }: any) => {
+//   const youtubeUrl = `https://youtu.be/${hit.video_id}?t=${hit.start_time}`;
+//   const thumbnailUrl = `https://img.youtube.com/vi/${hit.video_id}/mqdefault.jpg`;
+
+//   return (
+//     <a 
+//       href={youtubeUrl} 
+//       target="_blank" 
+//       rel="noopener noreferrer"
+//       // The Double Border Wrapper: Outer Border
+//       className="block bg-[#05020a] p-1 border border-[#2a1b42] hover:border-[#8b5ddf] transition-colors duration-300 group relative shadow-[0_0_15px_rgba(0,0,0,0.8)]"
+//     >
+//       {/* The Inner Border */}
+//       <div className="border border-[#1a1025] group-hover:border-[#4a2b7a] flex flex-col h-full bg-[#0a0514] transition-colors duration-300">
+        
+//         {/* Scrying Pool Thumbnail */}
+//         <div className="relative h-40 overflow-hidden bg-[#05020a] border-b border-[#1a1025]">
+//           {/* Purple overlay to tint the image */}
+//           <div className="absolute inset-0 bg-[#8b5ddf] mix-blend-overlay opacity-40 group-hover:opacity-20 transition-opacity z-10"></div>
+//           <img 
+//             src={thumbnailUrl} 
+//             alt={hit.title} 
+//             // Grayscale base that regains color on hover
+//             className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+//           />
+//           <div className={`absolute bottom-2 right-2 bg-[#05020a] border border-[#8b5ddf]/50 text-[#dcb8ff] px-2 py-0.5 text-xs font-bold shadow-lg z-20 ${cinzel.className}`}>
+//             {formatTime(hit.start_time)}
+//           </div>
+//         </div>
+        
+//         <div className="p-5 flex-1 flex flex-col relative">
+//           <h3 className={`text-lg font-bold mb-3 text-[#e2d8f4] group-hover:text-white transition-colors ${cinzel.className} tracking-wide`}>
+//             <span className="line-clamp-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{hit.title}</span>
+//           </h3>
+          
+//           {/* <p className="text-[#a89cbd] text-base leading-relaxed mt-auto tracking-normal"> */}
+//           <p className="text-[#a89cbd] group-hover:text-[#e2d8f4] text-base leading-relaxed mt-auto tracking-normal">
+//             <Highlight attribute="text" hit={hit} />
+//           </p>
+
+//           {/* <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+//           <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#8b5ddf] opacity-0 group-hover:opacity-100 transition-opacity"></div> */}
+//         </div>
+//       </div>
+//     </a>
+//   );
+// };
+
+// export default function Home() {
+//   return (
+//     // Body font applied globally
+//     <div className={`min-h-screen bg-[#06040a] text-[#e2d8f4] p-6 md:p-12 overflow-x-hidden relative ${crimson.className}`}>
+      
+//       {/* 3. The moving CRT scanline overlay */}
+//       <div className="pointer-events-none fixed inset-0 z-50 opacity-[0.15] mix-blend-overlay"
+//            style={{
+//              backgroundImage: 'linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 1) 50%)',
+//              backgroundSize: '100% 4px',
+//              animation: 'scanlines 35s linear infinite'
+//            }}>
+//       </div>
+
+//       {/* Global CSS for animations, highlight, and scrollbar */}
+//       <style dangerouslySetInnerHTML={{__html: `
+//         @keyframes scanlines {
+//           from { background-position: 0 0; }
+//           to { background-position: 0 -100px; }
+//         }
+
+//         ::-webkit-scrollbar { width: 8px; }
+//         ::-webkit-scrollbar-track { background: #06040a; border-left: 1px solid #1a1025; }
+//         ::-webkit-scrollbar-thumb { background: #2a1b42; }
+//         ::-webkit-scrollbar-thumb:hover { background: #4a2b7a; }
+
+//         mark.ais-Highlight-highlighted {
+//           background-color: transparent;
+//           color: #dcb8ff;
+//           text-shadow: 0 0 8px rgba(139, 93, 223, 0.6);
+//           border-bottom: 1px dashed #8b5ddf;
+//           font-weight: 700;
+//         }
+//       `}} />
+
+//       <div className="max-w-6xl mx-auto relative z-10">
+        
+//         <div className="text-center mb-10 flex flex-col items-center">
+          
+//           {/* Title with Cinzel font and intense drop shadow */}
+//           <h1 className={`text-5xl md:text-7xl font-bold relative mt-2 z-20 tracking-wider text-[#e2d8f4] drop-shadow-[0_0_15px_rgba(139,93,223,0.5)] ${cinzel.className}`}>
+//             Refresh Tome
+//           </h1>
+          
+//           <div 
+//             className="relative w-[350px] h-[350px] -my-22 pointer-events-none z-0"
+//             style={{
+//               mixBlendMode: 'screen',
+//               maskImage: 'radial-gradient(circle, black 30%, transparent 70%)',
+//               WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 70%)'
+//             }}
+//           >
+//              <EvilEye eyeColor="#8b5ddf" />
+//           </div>
+//         </div>
+
+//         <InstantSearch indexName="transcripts" searchClient={searchClient}>
+//           <Configure hitsPerPage={16} />
+          
+//           <div className="mb-16 max-w-2xl mx-auto relative group z-20">
+//             {/* The Search Bar: Styled like an engraved plaque */}
+//             <div className="p-1 border border-[#2a1b42] bg-[#05020a] shadow-[0_0_30px_rgba(0,0,0,1)]">
+//               <div className="relative border border-[#1a1025] bg-[#0a0514]">
+//                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#927faf] w-5 h-5 z-10" />
+                
+//                 <SearchBox 
+//                   placeholder="Search the volumes..."
+//                   classNames={{
+//                     root: 'relative',
+//                     form: 'relative',
+//                     input: `w-full p-4 pl-12 bg-transparent text-[#e2d8f4] placeholder-[#927faf] focus:outline-none focus:bg-[#0c071a] transition-colors text-xl ${crimson.className}`,
+//                     submitIcon: 'hidden',
+//                     resetIcon: 'hidden',
+//                     loadingIcon: 'hidden'
+//                   }}
+//                 />
+//               </div>
+//             </div>
+//           </div>
+
+//           <Hits 
+//             hitComponent={Hit} 
+//             classNames={{
+//               // Sharpened the grid gap to look more structured
+//               list: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-stretch justify-items-center',
+//               item: 'list-none flex'
+//             }}
+//           />
+//         </InstantSearch>
+//       </div>
+//     </div>
+//   );
+// }
