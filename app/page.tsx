@@ -48,7 +48,7 @@ const Hit = ({ hit }: any) => {
             alt={hit.title} 
             className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
           />
-          <div className={`absolute bottom-2 right-2 bg-[#05020a] border border-[var(--accent)]/50 text-[var(--accent)] px-2 py-0.5 text-xs font-bold shadow-lg z-20 ${cinzel.className}`}>
+          <div className={`absolute bottom-2 right-2 bg-[#05020a] border border-[var(--accent)]/50 text-[var(--video-time)] px-2 py-0.5 text-xs font-bold shadow-lg z-20 ${cinzel.className}`}>
             {formatTime(hit.start_time)}
           </div>
         </div>
@@ -102,13 +102,15 @@ export default function Home() {
           --overlay-opacity: 0.4;
           --highlight-bg: transparent;
           --highlight-color: #dcb8ff;
+          --video-time: #dcb8ff;
+          --search-icon: #927faf;
           --highlight-shadow: rgba(139, 93, 223, 0.6);
           --highlight-border: #8b5ddf;
         }
 
         [data-theme='high-contrast'] {
           --accent: #ffffff;
-          --thumbnail: #ffffff;
+          --thumbnail: #555555;
           --accent-muted: #888888;
           --border-outer: #555555;
           --border-inner: #333333;
@@ -119,6 +121,8 @@ export default function Home() {
           --overlay-opacity: 0.05;
           --highlight-bg: #ffffff;
           --highlight-color: #000000;
+          --video-time: #ffffff;
+          --search-icon: #888888;
           --highlight-shadow: rgba(255, 255, 255, 0.8);
           --highlight-border: #ffffff;
         }
@@ -182,7 +186,7 @@ export default function Home() {
           <div className="mb-16 max-w-2xl mx-auto relative group z-20">
             <div className="p-1 border border-[var(--border-outer)] bg-[#05020a] shadow-[0_0_30px_rgba(0,0,0,1)] transition-colors">
               <div className="relative border border-[var(--border-inner)] bg-[#0a0514] transition-colors">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--accent-muted)] w-5 h-5 z-10 transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--search-icon)] w-5 h-5 z-10 transition-colors" />
                 
                 <SearchBox 
                   placeholder="Search the chapters..."
