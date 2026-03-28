@@ -206,8 +206,8 @@ export default function Home() {
           <Hits 
             hitComponent={Hit} 
             classNames={{
-              list: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-stretch justify-items-center',
-              item: 'list-none flex w-full'
+              list: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-stretch justify-items-center place-self-center',
+              item: 'list-none flex w-full justify-center'
             }}
           />
         </InstantSearch>
