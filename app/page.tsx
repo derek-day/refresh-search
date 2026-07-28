@@ -189,7 +189,7 @@ export default function Home() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--search-icon)] w-5 h-5 z-10 transition-colors" />
                 
                 <SearchBox 
-                  placeholder="Search the chapters..."
+                  placeholder="Search the sessions..."
                   classNames={{
                     root: 'relative',
                     form: 'relative',
